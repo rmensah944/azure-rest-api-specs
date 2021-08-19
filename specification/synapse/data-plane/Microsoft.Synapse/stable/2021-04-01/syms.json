@@ -1,1 +1,2350 @@
-
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "SyMSAPIServiceClient",
+    "description": "SyMS API Service Client.",
+    "version": "2021-04-01"
+  },
+  "host": "localhost",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/databases/ExecuteChange": {
+      "post": {
+        "summary": "Create or Modify or Delete SyMS entities",
+        "operationId": "ExecuteChange",
+        "description": "Create or Modify or Delete SyMS entities.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "createArtifactsPayload",
+            "in": "body",
+            "description": "DDLBatch containing artifact drafts to be Created or Deleted or Modified.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DDLBatch"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the management operation.",
+            "schema": {
+              "$ref": "#/definitions/SyMSAPIDDLResponses"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/ExecuteChangeWithValidation": {
+      "post": {
+        "summary": "Validate the DDL content with validators.",
+        "operationId": "ExecuteChangeWithValidation",
+        "description": "Validate the DDL content with validators.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "createArtifactsPayload",
+            "in": "body",
+            "description": "DDLBatch containing artifact drafts to be Created or Deleted or Modified.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DDLBatch"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ValidationType",
+            "description": "Validation Type - Currently only IDWValidation is supported",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "returns location header with the operation Id"
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases": {
+      "get": {
+        "summary": "Get all databases in a workspace.",
+        "operationId": "ListDatabases",
+        "description": "Get all databases in a workspace.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of all the databases in a workspace.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/{artifactType}s": {
+      "get": {
+        "summary": "List all Artifacts of a type in a database.",
+        "operationId": "ListArtifacts",
+        "description": "List all Artifacts of a type in a database.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of all artifact types in a database.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/schemas/{schemaName}/{artifactType}s": {
+      "get": {
+        "summary": "List all artifacts of a database and schema.",
+        "operationId": "ListArtifactsForSchema",
+        "description": "List all Artifacts of a database and schema.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaName",
+            "in": "path",
+            "description": "Schema name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of all artifact types in a database and schema.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/tables/{tableName}/partitionInfos": {
+      "get": {
+        "summary": "List all partition information of a database and table.",
+        "operationId": "ListPartitionInfosForTable",
+        "description": "List all partition information of a database and table.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "description": "Table name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of partition infos in a database and table.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/views/{viewName}/partitionInfos": {
+      "get": {
+        "summary": "List all partition information of a database and table.",
+        "operationId": "ListPartitionInfosForView",
+        "description": "Get all partition information of a database and table.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "viewName",
+            "in": "path",
+            "description": "View name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of partition infos in a dtabase and view.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/schemas/{schemaName}/tables/{tableName}/partitionInfos": {
+      "get": {
+        "summary": "List all partition information of a database, schema, and table.",
+        "operationId": "ListPartitionInfosForSchemaAndTable",
+        "description": "List all partition information of a database, schema, and table.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaName",
+            "in": "path",
+            "description": "Schema name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tableName",
+            "in": "path",
+            "description": "Table name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of partition infos in a database, schema and table.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/schemas/{schemaName}/views/{viewName}/partitionInfos": {
+      "get": {
+        "summary": "List all partition information of a database, schema, and view.",
+        "operationId": "ListPartitionInfosForSchemaAndView",
+        "description": "List all partition information of a database, schema, and view.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaName",
+            "in": "path",
+            "description": "Schema name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "viewName",
+            "in": "path",
+            "description": "View name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of partition infos in a database, schema and view.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}": {
+      "get": {
+        "summary": "Get details about a database.",
+        "operationId": "GetDatabase",
+        "description": "Get details about a database.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of the given database name.",
+            "schema": {
+              "$ref": "#/definitions/DatabaseEntity"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put a database.",
+        "operationId": "PutDatabase",
+        "description": "Put a database.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "createArtifactsPayload",
+            "in": "body",
+            "description": "DDLBatch containing artifact drafts to be Created or Deleted or Modified.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DatabaseEntity"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the Put operation.",
+            "schema": {
+              "$ref": "#/definitions/SyMSAPIDDLResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a database.",
+        "operationId": "DeleteDatabase",
+        "description": "Delete a database.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the database given database name."
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/{artifactType}s/{artifactName}": {
+      "get": {
+        "summary": "Get an artifact from the database in a workspace.",
+        "operationId": "GetArtifactForDB",
+        "description": "Get an artifact from the database in a workspace.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Artifact name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of the given database name, artifact type and artifact name.",
+            "schema": {
+              "$ref": "#/definitions/MDEntity"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put an artifact to a Database.",
+        "operationId": "PutArtifactForDB",
+        "description": "Put an artifact to a Database.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Artifact name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "createArtifactsPayload",
+            "in": "body",
+            "description": "DDLBatch containing artifact drafts to be Created or Deleted or Modified.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MDEntity"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the Put operation given the database name, artifact type and artifact name.",
+            "schema": {
+              "$ref": "#/definitions/SyMSAPIDDLResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an artifact to a Database.",
+        "operationId": "DeleteArtifactForDB",
+        "description": "Delete an artifact to a Database.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Artifact name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the artifact given database name, artifcate type and artifact name."
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+             "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/{databaseName}/schemas/{schemaName}/{artifactType}s/{artifactName}": {
+      "get": {
+        "summary": "Get an artifact from the database and schema in a workspace.",
+        "operationId": "GetArtificateForDBAndSchema",
+        "description": "Get an artifact from the database and schema in a workspace.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaName",
+            "in": "path",
+            "description": "Schema name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Artifact name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned details of the given database name, schema name, artifact type and artifact name.",
+            "schema": {
+              "$ref": "#/definitions/MDEntity"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Put an artifact to a Database and Schema.",
+        "operationId": "PutArtifactForDBAndSchema",
+        "description": "Put an artifact to a Database and Schema.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaName",
+            "in": "path",
+            "description": "Schema name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Artifact name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "createArtifactsPayload",
+            "in": "body",
+            "description": "DDLBatch containing artifact drafts to be Created or Deleted or Modified.",
+            "required": true,
+            "schema": {
+             "$ref": "#/definitions/MDEntity"
+            }
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+            "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully completed the Put operation given the database name, schema name, artifact type and artifact name.",
+            "schema": {
+              "$ref": "#/definitions/SyMSAPIDDLResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an artifact to a Database and Schema.",
+        "operationId": "DeleteArtifactForDBAndSchema",
+        "description": "Delete an artifact to a Database and Schema.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "path",
+            "description": "Database name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "schemaName",
+            "in": "path",
+            "description": "Schema name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "artifactType",
+            "in": "path",
+            "description": "Artifact type.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "DATABASE",
+              "TABLE",
+              "SCHEMA",
+              "VIEW",
+              "FUNCTION",
+              "PARTITIONINFO",
+              "RELATIONSHIP"
+            ],
+            "x-ms-enum": {
+              "name": "SASEntityType",
+              "modelAsString": false
+            }
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Artifact name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "continuationToken",
+            "in": "query",
+            "description": "Continuation token to get next page.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "maxPageSize",
+           "in": "query",
+            "description": "Max page size.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted the artifact given database name, schema name, artifcate type and artifact name."
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    },
+    "/databases/operations/{operationId}": {
+      "get": {
+        "summary": "Get the status of validation by sending the operation Id,",
+        "operationId": "GetSyMSOperationStatus",
+        "description": "Get the status of validation by sending the operation Id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "operationId",
+            "in": "path",
+            "description": "Operation Id.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "description": "API version.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "User-Agent",
+            "type": "string",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned the status of given operation Id.",
+            "schema": {
+              "$ref": "#/definitions/QueryArtifactsResponse"
+            }
+          },
+          "default": {
+            "description": "SyMS error response.",
+            "schema": {
+              "$ref": "#/definitions/CloudError"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "SyMSAPIDDLResponse": {
+      "description": "Defines the response for create/publish operation on DDL payload.",
+      "type": "object",
+      "properties": {
+        "DDLType": {
+          "$ref": "#/definitions/DDLType"
+        },
+        "EntityName": {
+          "description": "Entity name.",
+          "type": "string"
+        },
+        "EntityType": {
+          "$ref": "#/definitions/ArtifactType"
+        },
+        "PublishStatus": {
+          "$ref": "#/definitions/PublishStatus"
+        },
+        "OriginObjectId": {
+          "description": "Object id maintained by Origin Catalog.",
+          "type": "string"
+        },
+        "ObjectId": {
+          "description": "Object id maintained by SyMS.",
+          "type": "string"
+        },
+        "ObjectVersion": {
+          "description": "Object version maintained by SyMS.",
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "DDLType",
+        "EntityName",
+        "EntityType",
+        "PublishStatus",
+        "OriginObjectId",
+        "ObjectId",
+        "ObjectVersion"
+      ]
+    },
+    "SyMSAPIDDLResponses": {
+      "description": "Defines the publish response.",
+      "type": "object",
+      "properties": {
+        "SyMSAPIDDLResponse": {
+          "description": "List of DDL response.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SyMSAPIDDLResponse"
+          }
+        }
+      },
+      "required": [
+        "SyMSAPIDDLResponse"
+      ]
+    },
+    "DataSource": {
+      "description": "Data source properties.",
+      "type": "object",
+      "properties": {
+        "Provider": {
+          "description": "Data source provider information.",
+          "type": "string"
+        },
+        "Location": {
+          "description": "Data source location.",
+          "type": "string"
+        },
+        "Properties": {
+          "description": "Property bag.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "Location"
+      ]
+    },
+    "Namespace": {
+      "description": "Namespace.",
+      "type": "object",
+      "properties": {
+        "DatabaseName": {
+          "description": "Database name.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "DatabaseName"
+      ]
+    },
+    "TableNamespace": {
+      "description": "Table namespace.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Namespace"
+        }
+      ],
+      "properties": {
+        "SchemaName": {
+          "description": "Schema name.",
+          "type": "string"
+        }
+      }
+    },
+    "PartitionInfoNamespace": {
+      "description": "Partition information namespace.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TableNamespace"
+        }
+      ],
+      "properties": {
+        "TableName": {
+          "description": "Table name.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "TableName"
+      ]
+    },
+    "FormatInfo": {
+      "description": "Format information.",
+      "type": "object",
+      "properties": {
+        "InputFormat": {
+          "$ref": "#/definitions/InputFormat"
+        },
+        "OutputFormat": {
+          "$ref": "#/definitions/OutputFormat"
+        },
+        "FormatType": {
+          "$ref": "#/definitions/FormatType"
+        },
+        "Properties": {
+          "description": "Property bag.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "SerDeName": {
+          "description": "SerDe name.",
+          "type": "string"
+        },
+        "SerializeLib": {
+          "$ref": "#/definitions/SerializeLib"
+        }
+      },
+      "required": [
+        "InputFormat",
+        "OutputFormat",
+        "FormatType",
+        "SerializeLib"
+      ]
+    },
+    "Sorting": {
+      "description": "Column sorting.",
+      "type": "object",
+      "properties": {
+        "KeyName": {
+          "description": "Name of column.",
+          "type": "string"
+        },
+        "SortOrder": {
+          "$ref": "#/definitions/SortOrder"
+        }
+      },
+      "required": [
+        "KeyName",
+        "SortOrder"
+      ]
+    },
+    "DistributionInfo": {
+      "description": "Distribution information.",
+      "type": "object",
+      "properties": {
+        "Type": {
+          "description": "Distribution type.",
+          "type": "string"
+        },
+        "Keys": {
+          "description": "Distribution keys.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "Count": {
+          "description": "Distribution count.",
+          "type": "integer"
+        },
+        "SortKeys": {
+          "description": "Distribution sort keys.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Sorting"
+          }
+        }
+      }
+    },
+    "TypeInfo": {
+      "description": "Type information",
+      "type": "object",
+      "properties": {
+        "TypeFamily": {
+          "description": "Type family.",
+          "type": "string"
+        },
+        "TypeName": {
+          "description": "Type name.",
+          "type": "string"
+        },
+        "IsTableType": {
+          "description": "Is Table type.",
+          "type": "boolean"
+        },
+        "IsComplexType": {
+          "description": "Is Complex type.",
+          "type": "boolean"
+        },
+        "IsNullable": {
+          "description": "Is Nullable.",
+          "type": "boolean"
+        },
+        "Length": {
+          "description": "Length.",
+          "type": "integer"
+        },
+        "Precision": {
+          "description": "Precision.",
+          "type": "integer"
+        },
+        "Scale": {
+          "description": "Scale.",
+          "type": "integer"
+        },
+        "Properties": {
+          "description": "Property bag.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "TypeName"
+      ]
+    },
+    "ScalarTypeInfo": {
+      "description": "Scalar type information",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TypeInfo"
+        }
+      ]
+    },
+    "DataColumn": {
+      "description": "Data column.",
+      "type": "object",
+      "properties": {
+        "Name": {
+          "description": "Column name.",
+          "type": "string"
+        },
+        "OriginDataTypeName": {
+          "$ref": "#/definitions/TypeInfo"
+        }
+      },
+      "required": [
+        "Name",
+        "OriginDataTypeName"
+      ]
+    },
+    "StorageDescriptor": {
+      "description": "Storage descriptor",
+      "type": "object",
+      "properties": {
+        "Distribution": {
+          "description": "Storage descriptor information.",
+          "$ref": "#/definitions/DistributionInfo"
+        },
+        "Columns": {
+          "description": "Column information.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataColumn"
+          }
+        },
+        "Format": {
+          "description": "Storage descriptor format information.",
+          "$ref": "#/definitions/FormatInfo"
+        },
+        "Source": {
+          "description": "Storage descriptor data source information.",
+          "$ref": "#/definitions/DataSource"
+        },
+        "Properties": {
+          "description": "Property bag.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "SerDeInfo": {
+          "description": "SerDe information.",
+          "type": "object"
+        }
+      },
+      "required": [
+        "Columns",
+        "Format",
+        "Source"
+      ]
+    },
+    "MDEntity": {
+      "description": "MD Entity",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Entity Name.",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ArtifactType"
+        },
+        "id": {
+          "description": "Entity Resource Id.",
+          "type": "string",
+          "readOnly": true
+        },
+        "properties": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ]
+    },
+    "MDEntityProperties": {
+      "description": "Defines the artifact entity.",
+      "type": "object",
+      "properties": {
+        "OriginObjectId": {
+          "description": "Entity object id maintained by the caller.",
+          "type": "string"
+        },
+        "ObjectId": {
+          "description": "Entity object id maintained by SyMS.",
+          "type": "string",
+          "readOnly": true
+        },
+        "ObjectVersion": {
+          "description": "Entity object version maintained by SyMS.",
+          "type": "integer",
+          "format": "int64",
+          "readOnly": true
+        },
+        "PublishStatus": {
+          "$ref": "#/definitions/PublishStatus"
+        },
+        "Properties": {
+          "description": "Property bag",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "DatabaseProperties": {
+      "description": "Database properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntityProperties"
+        }
+      ],
+      "properties": {
+        "Source": {
+          "$ref": "#/definitions/DataSource"
+        },
+        "Description": {
+          "description": "Description of the database.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "Source"
+      ]
+    },
+    "PartitionInfoProperties": {
+      "description": "Database properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntityProperties"
+        }
+      ],
+      "properties": {
+        "Namespace": {
+          "$ref": "#/definitions/PartitionInfoNamespace"
+        },
+        "StorageDescriptor": {
+          "$ref": "#/definitions/StorageDescriptor"
+        },
+        "PartitionKeyValues": {
+          "description": "Partition key values.",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      },
+      "required": [
+        "Namespace",
+        "StorageDescriptor",
+        "PartitionKeyValues"
+      ]
+    },
+    "SchemaProperties": {
+      "description": "Database properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntityProperties"
+        }
+      ],
+      "properties": {
+        "Namespace": {
+         "$ref": "#/definitions/Namespace"
+        }
+      },
+      "required": [
+        "Namespace"
+      ]
+    },
+    "ViewEntityProperties": {
+      "description": "Database properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntityProperties"
+        }
+      ],
+      "properties": {
+        "Namespace": {
+          "$ref": "#/definitions/TableNamespace"
+        },
+        "Partitioning": {
+          "$ref": "#/definitions/TablePartitioning"
+       },
+        "StorageDescriptor": {
+          "$ref": "#/definitions/StorageDescriptor"
+        },
+        "ViewOriginalText": {
+          "description": "View original text.",
+          "type": "string"
+        },
+        "ViewExpandedText": {
+          "description": "View expanded text.",
+          "type": "string"
+        },
+        "Temporary": {
+          "description": "Temporary.",
+          "type": "boolean"
+        },
+        "IsRewriteEnabled": {
+          "description": "Is rewrite enabled.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "Namespace",
+        "StorageDescriptor"
+      ]
+    },
+    "RelationshipProperties": {
+      "description": "Database properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntityProperties"
+        }
+      ],
+      "properties": {
+        "Namespace": {
+          "$ref": "#/definitions/Namespace"
+        },
+        "FromTableId": {
+          "description": "From Table Id",
+          "type": "string",
+          "readOnly": true
+        },
+        "FromTableName": {
+          "description": "From Table Name",
+          "type": "string"
+        },
+        "ToTableId": {
+          "description": "To Table Id",
+          "type": "string",
+          "readOnly": true
+        },
+        "ToTableName": {
+          "description": "To Table Name",
+          "type": "string"
+        },
+        "RelationshipType": {
+          "$ref": "#/definitions/RelationshipType"
+        },
+        "ColumnRelationshipInformations": {
+          "description": "List of Column Relationships.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ColumnRelationshipInformation"
+          }
+        }
+      },
+      "required": [
+        "Namespace",
+        "FromTableName",
+        "ToTableName",
+        "ColumnRelationshipInformations"
+      ]
+    },
+    "TableProperties": {
+      "description": "Database properties.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntityProperties"
+        }
+      ],
+      "properties": {
+        "Namespace": {
+          "$ref": "#/definitions/TableNamespace"
+        },
+        "Partitioning": {
+          "$ref": "#/definitions/TablePartitioning"
+        },
+        "TableType": {
+          "$ref": "#/definitions/TableType"
+        },
+        "StorageDescriptor": {
+          "$ref": "#/definitions/StorageDescriptor"
+        },
+        "Temporary": {
+          "description": "Temporary.",
+          "type": "boolean"
+        },
+        "IsRewriteEnabled": {
+          "description": "Is rewrite enabled.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "Namespace",
+        "TableType",
+        "StorageDescriptor"
+      ]
+    },
+    "PartitionInfo": {
+      "description": "Partition information.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntity"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/PartitionInfoProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "TablePartitioning": {
+      "description": "Table partitioning information.",
+      "type": "object",
+      "properties": {
+        "Keys": {
+          "description": "Table partitioning keys.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "PartitionFunctionType": {
+          "$ref": "#/definitions/PartitionFunctionType"
+        }
+      },
+      "required": [
+        "Keys",
+        "PartitionFunctionType"
+      ]
+    },
+    "DatabaseEntity": {
+      "description": "Database entity.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntity"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/DatabaseProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "SchemaEntity": {
+      "description": "Schema entity.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntity"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/SchemaProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "ViewEntity": {
+      "description": "View entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntity"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/ViewEntityProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "RelationshipEntity": {
+      "description": "Relationship Entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntity"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/RelationshipProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "TableEntity": {
+      "description": "Table entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MDEntity"
+        }
+      ],
+      "properties": {
+        "properties": {
+          "$ref": "#/definitions/TableProperties"
+        }
+      },
+      "required": [
+        "properties"
+      ]
+    },
+    "DDLPayload": {
+      "description": "DDL payload",
+      "type": "object",
+      "properties": {
+        "ActionType": {
+          "$ref": "#/definitions/DDLType"
+        },
+        "OldEntity": {
+          "$ref": "#/definitions/MDEntity"
+        },
+        "NewEntity": {
+          "$ref": "#/definitions/MDEntity"
+        }
+      },
+      "required": [
+        "ActionType"
+      ]
+    },
+    "DDLBatch": {
+      "description": "DDL batch.",
+      "type": "object",
+      "properties": {
+        "DDLs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DDLPayload"
+          }
+        }
+      },
+      "required": [
+        "DDLs"
+      ]
+    },
+    "QueryArtifactsResponse": {
+      "description": "Query artifacts response.",
+      "type": "object",
+      "properties": {
+        "Items": {
+          "type": "array",
+          "items": {
+            "description": "MDEntity (Database/Table/Schema/View/PartitionInfo/PermissionAssignment",
+            "type": "object"
+          }
+        },
+        "ContinuationToken": {
+          "description": "Continuation token to get next page.",
+          "type": "string"
+        }
+      }
+    },
+    "ColumnRelationshipInformation": {
+      "description": "Column information for relationship",
+      "type": "object",
+      "properties": {
+        "FromColumnName": {
+          "description": "From Column Name",
+          "type": "string"
+        },
+        "ToColumnName": {
+          "description": "To Column Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "FromColumnName",
+        "ToColumnName"
+      ]
+    },
+    "DDLType": {
+      "description": "DDL type.",
+      "type": "string",
+      "enum": [
+        "CREATE",
+        "ALTER",
+        "DROP"
+      ],
+      "x-ms-enum": {
+        "name": "DDLType",
+        "modelAsString": false
+      }
+    },
+    "PublishStatus": {
+      "description": "Publish status.",
+      "type": "string",
+      "enum": [
+        "PUBLISHED"
+      ],
+      "x-ms-enum": {
+        "name": "PublishStatus",
+        "modelAsString": false
+      }
+    },
+    "ArtifactType": {
+      "description": "Artifact type.",
+      "type": "string",
+      "enum": [
+        "DATABASE",
+        "TABLE",
+        "SCHEMA",
+        "VIEW",
+        "FUNCTION",
+        "PARTITIONINFO",
+        "RELATIONSHIP"
+      ],
+      "x-ms-enum": {
+        "name": "SASEntityType",
+        "modelAsString": false
+      }
+    },
+    "TableType": {
+      "description": "Entity type.",
+      "type": "string",
+      "enum": [
+        "MANAGED",
+        "EXTERNAL"
+      ],
+      "x-ms-enum": {
+        "name": "TableType",
+        "modelAsString": false
+      }
+    },
+    "SortOrder": {
+      "description": "Sorting order.",
+      "type": "string",
+      "enum": [
+        "DESC",
+        "ASC"
+      ],
+      "x-ms-enum": {
+        "name": "SortOrder",
+        "modelAsString": false
+      }
+    },
+    "InputFormat": {
+      "description": "Input Format to be used",
+      "type": "string",
+      "enum": [
+        "org.apache.hadoop.mapred.SequenceFileInputFormat",
+        "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+      ],
+      "x-ms-enum": {
+        "name": "InputFormat",
+        "modelAsString": false
+      }
+    },
+    "OutputFormat": {
+      "description": "Output Format to be used",
+      "type": "string",
+      "enum": [
+        "org.apache.hadoop.hive.ql.io.HiveSequenceFileOutputFormat",
+        "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+      ],
+      "x-ms-enum": {
+        "name": "OutputFormat",
+        "modelAsString": false
+      }
+    },
+    "FormatType": {
+      "description": "Format Type to be used",
+      "type": "string",
+      "enum": [
+        "csv",
+        "parquet"
+      ],
+      "x-ms-enum": {
+        "name": "FormatType",
+        "modelAsString": false
+      }
+    },
+    "SerializeLib": {
+      "description": "Serialiable Library to be used by Spark",
+      "type": "string",
+      "enum": [
+        "org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe",
+        "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+      ],
+      "x-ms-enum": {
+        "name": "SerializeLib",
+        "modelAsString": false
+      }
+    },
+    "PartitionFunctionType": {
+      "description": "Partition Function Type",
+      "type": "string",
+      "enum": [
+        "value"
+      ],
+      "x-ms-enum": {
+        "name": "PartitionFunctionType",
+        "modelAsString": false
+      }
+    },
+    "RelationshipType": {
+      "description": "Relation Type",
+      "type": "string",
+      "enum": [
+        "ONETOONE",
+        "ONETOMANY",
+        "MANYTOONE",
+        "MANYTOMANY"
+      ],
+      "x-ms-enum": {
+        "name": "RelationshipType",
+        "modelAsString": false
+      }
+    },
+    "ValidationType": {
+      "description": "Validation Type",
+      "type": "string",
+      "enum": [
+        "IDWValidation"
+      ],
+      "x-ms-enum": {
+        "name": "ValidationType",
+        "modelAsString": false
+      }
+    },
+    "ValidationStatus": {
+      "description": "Validation Status",
+      "type": "string",
+      "enum": [
+        "VALID",
+        "INVALID"
+      ],
+      "x-ms-enum": {
+        "name": "ValidationStatus",
+       "modelAsString": false
+      }
+    },
+    "CloudError": {
+      "x-ms-external": true,
+      "description": "The object that defines the structure of an SyMS error response.",
+      "type": "object",
+      "properties": {
+        "error": {
+          "x-ms-client-flatten": true,
+          "description": "Error data.",
+          "$ref": "#/definitions/CloudErrorBody"
+        }
+      },
+      "required": [
+        "error"
+      ]
+    },
+    "CloudErrorBody": {
+      "x-ms-external": true,
+      "description": "The object that defines the structure of an SAS error.",
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Error code.",
+          "type": "string"
+        },
+        "message": {
+          "description": "Error message.",
+          "type": "string"
+        },
+        "target": {
+          "description": "Property name/path in request associated with error.",
+          "type": "string"
+        },
+        "details": {
+          "description": "Array with additional error details.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CloudError"
+          }
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    }
+  }
+}
